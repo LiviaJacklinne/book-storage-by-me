@@ -17,4 +17,7 @@ export class LivroDto {
 
   @IsEnum(GeneroEnum, { message: "Gênero inválido" })
   genero: GeneroEnum;
+
+  @IsNotEmpty({ message: "A quantidade disponível não pode ser vazia" })
+  qtdDisponivel: number;
 }

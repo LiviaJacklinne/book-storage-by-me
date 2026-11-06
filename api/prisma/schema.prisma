@@ -23,4 +23,7 @@ model Livro {
   autor String
   anoPublicacao Int?
   genero GeneroEnum
+  qtdDisponivel Int
+
+  @@map("livro")
 }

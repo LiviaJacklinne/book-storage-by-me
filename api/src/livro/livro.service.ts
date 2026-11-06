@@ -38,6 +38,7 @@ export class LivroService {
 				autor: data.autor,
 				anoPublicacao: data.anoPublicacao,
 				genero: data.genero,
+				qtdDisponivel: data.qtdDisponivel,
 			},
 		});
 	}
