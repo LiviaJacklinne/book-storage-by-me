@@ -1,5 +1,5 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { GeneroEnum } from "../../generated/prisma/enums";
+import { GeneroEnum } from "../../../generated/prisma/enums";
 import { PartialType } from '@nestjs/mapped-types';
 
 

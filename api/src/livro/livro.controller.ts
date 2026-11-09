@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
 import { LivroService } from "./livro.service";
-import { LivroDto, UpdateLivroDto } from "./livro.dto";
+import { LivroDto, UpdateLivroDto } from "./dto/livro.dto";
 
 @Controller("livro")
 export class LivroController {
