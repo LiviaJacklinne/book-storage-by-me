@@ -80,14 +80,7 @@ npm install
 
 ### 3. Configurar as variáveis de ambiente
 
-Crie um arquivo `.env` dentro de `api/`:
-
-```env
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=book_storage
-DATABASE_URL=postgresql://postgres:postgres@localhost:5300/book_storage
-```
+Copie o arquivo `.env.exemple` dentro de `api/`, renomei para `.env` e ajuste as variáveis
 
 ### 4. Subir o banco de dados
 

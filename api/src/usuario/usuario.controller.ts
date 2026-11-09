@@ -13,12 +13,12 @@ export class UsuarioController {
 
   @Get()
   findAll() {
-    return this.usuarioService.findAll();
+    return this.usuarioService.findAllUsuarios();
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const usuario = await this.usuarioService.findOne(id);
+    const usuario = await this.usuarioService.getUsuarioById(id);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
@@ -27,7 +27,7 @@ export class UsuarioController {
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    const usuario = this.usuarioService.findOne(id);
+    const usuario = this.usuarioService.getUsuarioById(id);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
@@ -36,10 +36,10 @@ export class UsuarioController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const usuario = this.usuarioService.findOne(id);
+    const usuario = this.usuarioService.getUsuarioById(id);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
-    return this.usuarioService.remove(id);
+    return this.usuarioService.deleteUsuario(id);
   }
 }
