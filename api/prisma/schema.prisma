@@ -27,3 +27,11 @@ model Livro {
 
   @@map("livro")
 }
+
+model Usuario {
+  id Int @id @default(autoincrement())
+  email String
+  senha String
+
+  @@map("usuario")
+}
