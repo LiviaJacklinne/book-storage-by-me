@@ -1,5 +1,7 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { GeneroEnum } from "../../generated/prisma/enums";
+import { PartialType } from '@nestjs/mapped-types';
+
 
 export class LivroDto {
 
@@ -21,3 +23,5 @@ export class LivroDto {
   @IsNotEmpty({ message: "A quantidade disponível não pode ser vazia" })
   qtdDisponivel: number;
 }
+
+export class UpdateLivroDto extends PartialType(LivroDto) {}

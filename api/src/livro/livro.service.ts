@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { LivroDto } from "./livro.dto";
+import { LivroDto, UpdateLivroDto } from "./livro.dto";
 
 @Injectable()
 export class LivroService {
@@ -41,6 +41,10 @@ export class LivroService {
 				qtdDisponivel: data.qtdDisponivel,
 			},
 		});
+	}
+
+	async updateLivro(id: number, data: UpdateLivroDto) {
+		return this.prismaService.livro.update({ where: { id }, data});
 	}
 
 }

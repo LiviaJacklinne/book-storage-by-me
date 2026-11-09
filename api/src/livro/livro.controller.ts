@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
 import { LivroService } from "./livro.service";
-import { LivroDto } from "./livro.dto";
+import { LivroDto, UpdateLivroDto } from "./livro.dto";
 
 @Controller("livro")
 export class LivroController {
@@ -32,5 +32,14 @@ export class LivroController {
   @Post()
   async criar(@Body() data: LivroDto) {
     return this.livroService.createLivro(data);
+  }
+
+  @Patch(":id")
+  async update(@Param("id", ParseIntPipe) id: number, @Body() data: UpdateLivroDto) {
+    const livro = await this.livroService.getLivroById(id);
+    if (!livro) {
+      throw new NotFoundException("Livro não encontrado");
+    }
+    return this.livroService.updateLivro(id, data);
   }
 }
