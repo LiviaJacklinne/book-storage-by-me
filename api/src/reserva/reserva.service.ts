@@ -1,5 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+
+// Tempo da reserva 5 segundos
+const TEMPO_RESERVA_SEGUNDOS = 5;
 
 @Injectable()
 export class ReservaService {
@@ -50,12 +53,12 @@ export class ReservaService {
     });
 
     if (!reserva) {
-      throw new NotFoundException(`Reserva com ID ${id} não encontrada`);
+      throw new BadRequestException(`Reserva com ID ${id} não encontrada`);
     }
 
     return {
       id: reserva.id,
-      descricao: `Reserva do livro "${reserva.livro.titulo}" pelo usuário "${reserva.usuario.nome}"`,
+      descricao: `Reserva do livro '${reserva.livro.titulo}' pelo usuário '${reserva.usuario.nome}'`,
       autor: reserva.livro.autor,
       dataReserva: reserva.dataReserva,
       dataDevolucao: reserva.dataDevolucao,
@@ -66,38 +69,45 @@ export class ReservaService {
   async createReserva(data: any) {
 
     const usuario = await this.prismaService.usuario.findUnique({
-      where: { id: data.usuarioId },
+      where: { id: data.id_usuario },
     });
 
     if (!usuario) {
-      throw new NotFoundException(`Usuário com ID ${data.usuarioId} não encontrado`);
+      throw new BadRequestException(`Usuário com ID ${data.id_usuario} não encontrado`);
     }
 
-    const livro = await this.prismaService.livro.findUnique({
-      where: { id: data.livroId },
-    });
+    const dataReserva = new Date(Date.now());
+    const dataDevolucao = new Date(
+      dataReserva.getTime() + TEMPO_RESERVA_SEGUNDOS * 1000,
+    );
 
-    if (!livro) {
-      throw new NotFoundException(`Livro com ID ${data.livroId} não encontrado`);
-    }
-    if (livro.qtdDisponivel <= 0) {
-      throw new NotFoundException(`Livro "${livro.titulo}" não está disponível para reserva`);
-    }
+    return this.prismaService.$transaction(async (tx) => {
 
-    this.prismaService.livro.update({
-      where: { id: data.livroId },
-      data: {
-        qtdDisponivel: livro.qtdDisponivel - 1,
-      },
-    });
+      const livro = await tx.livro.findUnique({
+        where: { id: data.id_livro },
+      });
 
-    return this.prismaService.reservaLivro.create({
-      data: {
-        id_usuario: data.usuarioId,
-        id_livro: data.livroId,
-        dataReserva: data.dataReserva,
-        dataDevolucao: data.dataDevolucao,
-      },
+      if (!livro) {
+        throw new BadRequestException(`Livro com ID ${data.id_livro} não encontrado`);
+      }
+      if (livro.qtdDisponivel <= 0) {
+        throw new ConflictException(`Livro '${livro.titulo}' não está disponível para reserva`);
+      }
+
+      await tx.livro.update({
+        where: { id: data.id_livro },
+        data: { qtdDisponivel: { decrement: 1 } },
+      });
+    
+
+      return this.prismaService.reservaLivro.create({
+        data: {
+          id_usuario: data.id_usuario,
+          id_livro: data.id_livro,
+          dataReserva,
+          dataDevolucao,
+        },
+      });
     });
   }
 }
