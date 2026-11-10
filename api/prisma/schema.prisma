@@ -25,14 +25,42 @@ model Livro {
   genero GeneroEnum
   qtdDisponivel Int
 
+  reservas ReservaLivro[]
+
   @@map("livro")
 }
 
 model Usuario {
   id Int @id @default(autoincrement())
   nome String
-  email String
+  email String @unique
   senha String
 
+  reservas ReservaLivro[]
+
   @@map("usuario")
+}
+
+enum ReservaStatusEnum {
+  ATIVA
+  EXPIRADA
+  CANCELADA
+  CONCLUIDA
+}
+
+model ReservaLivro {
+  id         Int               @id @default(autoincrement())
+  id_usuario Int
+  id_livro   Int
+  dataReserva   DateTime          @default(now())
+  dataDevolucao   DateTime
+  status     ReservaStatusEnum @default(ATIVA)
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
+  livro   Livro   @relation(fields: [id_livro], references: [id])
+
+  @@index([id_usuario])
+  @@index([id_livro])
+  @@index([status, dataDevolucao])
+  @@map("reserva_livro")
 }

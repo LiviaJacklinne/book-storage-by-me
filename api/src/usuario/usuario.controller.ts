@@ -27,7 +27,7 @@ export class UsuarioController {
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
-    const usuario = this.usuarioService.getUsuarioById(id);
+    const usuario = await this.usuarioService.getUsuarioById(id);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
@@ -36,7 +36,7 @@ export class UsuarioController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const usuario = this.usuarioService.getUsuarioById(id);
+    const usuario = await this.usuarioService.getUsuarioById(id);
     if (!usuario) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
