@@ -100,12 +100,42 @@ export class ReservaService {
       });
     
 
-      return this.prismaService.reservaLivro.create({
+      return tx.reservaLivro.create({
         data: {
           id_usuario: data.id_usuario,
           id_livro: data.id_livro,
           dataReserva,
           dataDevolucao,
+        },
+      });
+    });
+  }
+
+  async devolverReserva(id: number) {
+    return this.prismaService.$transaction(async (tx) => {
+
+      const reserva = await this.prismaService.reservaLivro.findUnique({
+        where: { id },
+      });
+
+      if (!reserva) {
+        throw new BadRequestException(`Reserva com ID ${id} não encontrada`);
+      }
+      if (reserva.status === 'CONCLUIDA') {
+      throw new ConflictException(
+        `O livro da reserva com ID ${id} já foi devolvido`,
+      );
+    }
+
+      await tx.livro.update({
+        where: { id: reserva.id_livro },
+        data: { qtdDisponivel: { increment: 1 } },
+      });
+
+      return tx.reservaLivro.update({
+        where: { id },
+        data: {
+          status: 'CONCLUIDA', 
         },
       });
     });

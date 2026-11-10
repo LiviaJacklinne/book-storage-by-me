@@ -18,11 +18,16 @@ export class ReservaController {
     if (!reserva) {
       throw new NotFoundException(`Reserva com ID ${id} não encontrada`);
     }
-    return this.reservaService.getReservaById(id);
+    return reserva;
   }
 
   @Post()
   async createReserva(@Body() data: ReservaDto) {
     return this.reservaService.createReserva(data);
+  }
+
+  @Post('devolver/:id')
+  async devolverReserva(@Param('id', ParseIntPipe) id: number) {
+    return this.reservaService.devolverReserva(id);
   }
 }
