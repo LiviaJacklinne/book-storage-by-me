@@ -1,7 +1,9 @@
-import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { ReservaService } from './reserva.service';
 import { ReservaDto } from './dto/reserva.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('reserva')
 export class ReservaController {
 

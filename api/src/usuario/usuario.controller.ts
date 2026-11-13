@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { UpdateUsuarioDto, UsuarioDto } from './dto/usuario.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -11,11 +12,13 @@ export class UsuarioController {
     return this.usuarioService.create(createUsuarioDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.usuarioService.findAllUsuarios();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const usuario = await this.usuarioService.getUsuarioById(id);
@@ -25,6 +28,7 @@ export class UsuarioController {
     return usuario;
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.usuarioService.getUsuarioById(id);
@@ -34,6 +38,7 @@ export class UsuarioController {
     return this.usuarioService.update(id, updateUsuarioDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     const usuario = await this.usuarioService.getUsuarioById(id);

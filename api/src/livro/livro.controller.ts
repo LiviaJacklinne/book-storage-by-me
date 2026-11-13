@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { LivroService } from "./livro.service";
 import { LivroDto, UpdateLivroDto } from "./dto/livro.dto";
+import { AuthGuard } from "../auth/auth.guard";
 
+@UseGuards(AuthGuard)
 @Controller("livro")
 export class LivroController {
   constructor(private readonly livroService: LivroService) {}
