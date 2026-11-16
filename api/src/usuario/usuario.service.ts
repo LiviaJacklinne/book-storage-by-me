@@ -23,12 +23,14 @@ export class UsuarioService {
   async create(createUsuarioDto: UsuarioDto) {
     return this.prismaService.usuario.create({
       data: createUsuarioDto,
+      omit: { senha: true },
     });
   }
 
   async getUsuarioById(id: number) {
     return this.prismaService.usuario.findUnique({
       where: { id },
+      omit: { senha: true },
     });
   }
 
@@ -36,12 +38,14 @@ export class UsuarioService {
     return this.prismaService.usuario.update({
       where: { id },
       data: updateUsuarioDto,
+      omit: { senha: true },
     });
   }
 
   async deleteUsuario(id: number) {
     return this.prismaService.usuario.delete({
       where: { id },
+      omit: { senha: true },
     });
   }
 

@@ -66,14 +66,14 @@ export class ReservaService {
     };
   }
 
-  async createReserva(data: any) {
+  async createReserva(data: any, usuarioId: number) {
 
     const usuario = await this.prismaService.usuario.findUnique({
-      where: { id: data.id_usuario },
+      where: { id: usuarioId },
     });
 
     if (!usuario) {
-      throw new BadRequestException(`Usuário com ID ${data.id_usuario} não encontrado`);
+      throw new BadRequestException(`Usuário com ID ${usuarioId} não encontrado`);
     }
 
     const dataReserva = new Date(Date.now());
@@ -102,7 +102,7 @@ export class ReservaService {
 
       return tx.reservaLivro.create({
         data: {
-          id_usuario: data.id_usuario,
+          id_usuario: usuarioId,
           id_livro: data.id_livro,
           dataReserva,
           dataDevolucao,

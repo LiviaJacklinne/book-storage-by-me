@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, Req, UseGuards } from '@nestjs/common';
 import { ReservaService } from './reserva.service';
 import { ReservaDto } from './dto/reserva.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -24,8 +24,8 @@ export class ReservaController {
   }
 
   @Post()
-  async createReserva(@Body() data: ReservaDto) {
-    return this.reservaService.createReserva(data);
+  async createReserva(@Body() data: ReservaDto, @Req() request: any) {
+    return this.reservaService.createReserva(data, request.user.id);
   }
 
   @Post('devolver/:id')
