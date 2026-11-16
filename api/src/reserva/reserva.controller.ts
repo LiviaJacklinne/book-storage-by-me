@@ -3,6 +3,13 @@ import { ReservaService } from './reserva.service';
 import { ReservaDto } from './dto/reserva.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
+type AuxRequestComUsuario = { 
+  user: { 
+    sub: number; 
+    email: string 
+  } 
+};
+
 @UseGuards(AuthGuard)
 @Controller('reserva')
 export class ReservaController {
@@ -24,8 +31,8 @@ export class ReservaController {
   }
 
   @Post()
-  async createReserva(@Body() data: ReservaDto, @Req() request: any) {
-    return this.reservaService.createReserva(data, request.user.id);
+  async createReserva(@Body() data: ReservaDto, @Req() request: AuxRequestComUsuario) {
+    return this.reservaService.createReserva(data, request.user.sub);
   }
 
   @Post('devolver/:id')

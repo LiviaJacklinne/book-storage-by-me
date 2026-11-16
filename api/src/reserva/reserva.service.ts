@@ -1,5 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { ReservaDto } from './dto/reserva.dto';
 
 // Tempo da reserva 5 segundos
 const TEMPO_RESERVA_SEGUNDOS = 5;
@@ -66,7 +67,7 @@ export class ReservaService {
     };
   }
 
-  async createReserva(data: any, usuarioId: number) {
+  async createReserva(data: ReservaDto, usuarioId: number) {
 
     const usuario = await this.prismaService.usuario.findUnique({
       where: { id: usuarioId },
@@ -114,7 +115,7 @@ export class ReservaService {
   async devolverReserva(id: number) {
     return this.prismaService.$transaction(async (tx) => {
 
-      const reserva = await this.prismaService.reservaLivro.findUnique({
+      const reserva = await tx.reservaLivro.findUnique({
         where: { id },
       });
 
@@ -136,6 +137,7 @@ export class ReservaService {
         where: { id },
         data: {
           status: 'CONCLUIDA', 
+          dataDevolucao: new Date(),
         },
       });
     });
