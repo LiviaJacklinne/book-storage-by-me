@@ -9,12 +9,20 @@ export class Auth {
 
   private http = inject(HttpClient);
 
-   login(email: string, senha: string) {
+  login(email: string, senha: string) {
     return this.http
       .post<{ access_token: string }>('/api/auth/login', { email, senha })
       .pipe(
         tap((response) => localStorage.setItem('authToken', response.access_token)),
       );
+  }
+
+  logout() {
+    localStorage.removeItem('authToken');
+  }
+
+  getToken() {
+    return localStorage.getItem('authToken');
   }
 
 }
