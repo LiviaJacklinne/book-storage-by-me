@@ -1,1 +1,28 @@
-<form [formGroup]="form" (ngSubmit)="entrar()"></form>
+<main class="min-h-screen flex items-center justify-center bg-slate-100 px-4">
+  <form [formGroup]="form" (ngSubmit)="entrar()" class="w-full max-w-sm bg-white rounded-sxl shadow-lg p-8 flex flex-col gap-4">
+    <h1 class="text-2xl font-bold text-slate-800 text-center">Entrar</h1>
+    
+    <div class="flex flex-col gap-1">
+      <label for="email" class="text-sm font-medium text-slate-700">Email:</label>
+      <input class="border border-slate-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+        type="email" id="email" formControlName="email">
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="senha" class="text-sm font-medium text-slate-700">Senha:</label>
+      <input class="border border-slate-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+        type="password" id="senha" formControlName="senha">
+    </div>
+
+    @if(erro()){
+      <p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2" role="alert">{{ erro() }}</p>
+    }
+
+    <button 
+      type="submit" [disabled]="form.invalid" 
+      class="rounded-lg bg-indigo-600 text-white font-semibold py-2 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      Entrar
+    </button>
+  </form>
+</main>

@@ -26,6 +26,7 @@ export class Login {
     this.auth.login(email!, senha!).subscribe({
       next: () => {
         console.log('Login bem-sucedido');
+        this.router.navigate(['/home']);
       },
       error: () => {
         this.erro.set('Email ou senha inválidos');
